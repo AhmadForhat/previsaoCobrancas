@@ -115,8 +115,9 @@ const objectPrevisoes = (baseSheet) => {
     const result = baseSheet.map(item => {
         const {vencimento, status, baixa, condPagamento } = item
         const cobrancaAtrasada = (vencimento, status, baixa, condPagamento) => {
-            if(status === 'Baixado') return stringToData(baixa)
-            if(new Date() < stringToData(vencimento)) return proximaDataCobranca(new Date(), condPagamento)
+            if(status !== 'Baixado' && new Date() < stringToData(vencimento)) return proximaDataCobranca(stringToData(vencimento), condPagamento)
+            if(status !== 'Baixado' && new Date() >= stringToData(vencimento)) return proximaDataCobranca(new Date(), condPagamento)
+            if(baixa && status === 'Baixado') return stringToData(baixa)
         }
         return {
             proximaCobranca: proximaDataCobranca(stringToData(vencimento), condPagamento),
